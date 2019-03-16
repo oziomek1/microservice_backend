@@ -1,0 +1,29 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "0.0.1",
+    "title": "Users Service",
+    "description": "Swagger spec for documenting the users service"
+  },
+  "host": "127.0.0.1",
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/ping": {
+      "get": {
+        "description": "Just a sanity check",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Will return 'pong!'"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+  }
+}

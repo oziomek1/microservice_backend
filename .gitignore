@@ -1,0 +1,33 @@
+.idea/
+/out/
+
+### macOS ###
+*.DS_Store
+
+### Python ###
+*$py.class
+*.pyc
+__pycache__/
+
+build/
+lib/
+wheels/
+target/
+
+# Unit test / coverage reports
+htmlcov/
+.coverage
+
+# Flask stuff:
+instance/
+.webassets-cache
+
+# Scrapy stuff:
+.scrapy
+
+# env / virtualenv
+env/
+.env
+.venv
+venv/
+ENV/
