@@ -40,7 +40,7 @@ Stop and remove container:
 
 Force a build
 
-`docker-compose -f docker-compose-dev.yml build --no-cachez
+`docker-compose -f docker-compose-dev.yml build --no-cache`
 
 Access PostgreSQL via psql?
 
