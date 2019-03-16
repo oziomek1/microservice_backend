@@ -1,4 +1,6 @@
-version: '3.7'
+version: '3.6'
+#version: '3.7' - need downgrade due to external machine config
+
 
 services:
 

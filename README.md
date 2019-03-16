@@ -2,6 +2,13 @@
 
 ## Commands list:
 
+##### Check code style before each new commit!
+
+Run code style test:
+
+`docker-compose -f docker-compose-dev.yml run users flake8 project`
+
+
 Build the images:
 
 `docker-compose -f docker-compose-dev.yml build`
@@ -25,10 +32,6 @@ Run the tests:
 Run the tests with code coverage:
 
 `docker-compose -f docker-compose-dev.yml run users python manage.py cov`
-
-Run code style test:
-
-`docker-compose -f docker-compose-dev.yml run users flake8 project`
 
 Stop the container:
 
