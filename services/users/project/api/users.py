@@ -30,11 +30,11 @@ def ping():
 @users_blueprint.route('/users', methods=['POST'])
 def add_user():
     post_data = request.get_json()
+    response_object = {
+        'status': 'fail',
+        'message': 'Invalid payload.',
+    }
     if not post_data:
-        response_object = {
-            'status': 'fail',
-            'message': 'Invalid payload.',
-        }
         return jsonify(response_object), 400
 
     username = post_data.get('username')
@@ -51,17 +51,10 @@ def add_user():
             }
             return jsonify(response_object), 201
         else:
-            response_object = {
-                'status': 'fail',
-                'message': 'Email already exists.',
-            }
+            response_object['message'] = 'Email already exists.'
             return jsonify(response_object), 400
     except (exc.IntegrityError, ValueError):
         db.session.rollback()
-        response_object = {
-            'status': 'fail',
-            'message': 'Invalid payload',
-        }
         return jsonify(response_object), 400
 
 
