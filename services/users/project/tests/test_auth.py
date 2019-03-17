@@ -2,6 +2,8 @@ import json
 
 from flask import current_app
 
+from project import db
+from project.api.models import User
 from project.tests.base import BaseTestCase
 from project.tests.utils import add_user
 
@@ -280,3 +282,65 @@ class TestAuthBlueprint(BaseTestCase):
             self.assertTrue(response.content_type, 'application/json')
             self.assertTrue(data['status'] == 'fail')
             self.assertTrue(data['message'] == 'Invalid token. Log in again.')
+
+    def test_invalid_logout_inactive(self):
+        username = 'test'
+        email = 'test@test.com'
+        password = 'example_password'
+        add_user(username=username, email=email, password=password)
+        user = User.query.filter_by(email=email).first()
+        user.active = False
+        db.session.commit()
+
+        with self.client:
+            response = self.client.post(
+                '/auth/login',
+                data=json.dumps({
+                    'email': email,
+                    'password': password,
+                }),
+                content_type='application/json',
+            )
+            token = json.loads(response.data.decode())['auth_token']
+            response = self.client.get(
+                '/auth/logout',
+                headers={
+                    'Authorization': f'Bearer {token}',
+                }
+            )
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 401)
+            self.assertTrue(data['status'] == 'fail')
+            self.assertTrue(data['message'] == 'Provide valid auth token.')
+
+    def test_invalid_status_inactive(self):
+        username = 'test'
+        email = 'test@test.com'
+        password = 'example_password'
+        add_user(username=username, email=email, password=password)
+
+        user = User.query.filter_by(email=email).first()
+        user.active = False
+        db.session.commit()
+
+        with self.client:
+            response = self.client.post(
+                '/auth/login',
+                data=json.dumps({
+                    'email': email,
+                    'password': password,
+                }),
+                content_type='application/json',
+            )
+            token = json.loads(response.data.decode())['auth_token']
+            response = self.client.get(
+                '/auth/status',
+                headers={
+                    'Authorization': f'Bearer {token}',
+                }
+            )
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 401)
+            self.assertTrue(response.content_type, 'application/json')
+            self.assertTrue(data['status'] == 'fail')
+            self.assertTrue(data['message'] == 'Provide valid auth token.')
