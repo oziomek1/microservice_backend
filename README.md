@@ -78,8 +78,8 @@ User:
 ## Flake8:
 * 120 max line length
 
-## Tagging commit messages and changesets
-*[NEW FEATURE]: A new feature (also small additions). Most likely it will be an added feature, but it could also be removed.
-*[BUGFIX]: A fix for a bug.
-*[API]: An API has changed, methods or classes have been added or removed; method signatures or return types have changed.
-*[PC]: Anything not covered by the above categories, e.g. coding style cleanup, code refactoring.
+## Tagging commit messages and changesets:
+* [NEW FEATURE]: A new feature (also small additions). Most likely it will be an added feature, but it could also be removed
+* [BUGFIX]: A fix for a bug
+* [API]: An API has changed, methods or classes have been added or removed; method signatures or return types have changed
+* [PC]: Anything not covered by the above categories, e.g. coding style cleanup, code refactoring
