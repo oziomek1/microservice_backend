@@ -15,6 +15,7 @@ class User(db.Model):
     password = db.Column(db.String(255), nullable=False)
     active = db.Column(db.Boolean(), default=True, nullable=False)
     created_date = db.Column(db.DateTime, default=func.now(), nullable=False)
+    admin = db.Column(db.Boolean, default=False, nullable=False)
 
     def __init__(self, username, email, password):
         self.username = username
@@ -23,16 +24,8 @@ class User(db.Model):
             password, current_app.config.get('BCRYPT_LOG_ROUND')
         ).decode()
 
-    def to_json(self):
-        return {
-            'id': self.id,
-            'username': self.username,
-            'email': self.email,
-            'active': self.active,
-            'created_date': self.created_date,
-        }
-
-    def encode_auth_token(self, user_id):
+    @staticmethod
+    def encode_auth_token(user_id):
         try:
             payload = {
                 'exp': datetime.datetime.utcnow() + datetime.timedelta(  # token expiration time
@@ -50,11 +43,21 @@ class User(db.Model):
         except Exception as ex:
             return ex
 
-    def decode_auth_token(self, auth_token):
+    @staticmethod
+    def decode_auth_token(auth_token):
         try:
             payload = jwt.decode(auth_token, current_app.config.get('SECRET_KEY'))
             return payload['sub']
         except jwt.ExpiredSignatureError:
-            return 'Signature expired. Please log in.'
+            return 'Token expired. Log in again.'
         except jwt.InvalidTokenError:
-            return 'Invalid token. Please log in.'
+            return 'Invalid token. Log in again.'
+
+    def to_json(self):
+        return {
+            'id': self.id,
+            'username': self.username,
+            'email': self.email,
+            'active': self.active,
+            'created_date': self.created_date,
+        }

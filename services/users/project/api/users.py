@@ -2,6 +2,9 @@ from flask import Blueprint, jsonify, request
 from sqlalchemy import exc
 
 from project.api.models import User
+from project.api.utils import authenticate
+from project.api.utils import is_admin
+from project.api.utils import post_request
 from project import db
 
 
@@ -28,13 +31,13 @@ def ping():
 
 
 @users_blueprint.route('/users', methods=['POST'])
-def add_user():
-    post_data = request.get_json()
+@authenticate
+def add_user(response):
+    post_data, response_object = post_request()
+    if not is_admin(response):
+        response_object['message'] = 'No permission.'
+        return jsonify(response_object), 401
     if not post_data:
-        response_object = {
-            'status': 'fail',
-            'message': 'Invalid payload.',
-        }
         return jsonify(response_object), 400
 
     username = post_data.get('username')
@@ -51,17 +54,10 @@ def add_user():
             }
             return jsonify(response_object), 201
         else:
-            response_object = {
-                'status': 'fail',
-                'message': 'Email already exists.',
-            }
+            response_object['message'] = 'Email already exists.'
             return jsonify(response_object), 400
     except (exc.IntegrityError, ValueError):
         db.session.rollback()
-        response_object = {
-            'status': 'fail',
-            'message': 'Invalid payload',
-        }
         return jsonify(response_object), 400
 
 
@@ -78,13 +74,7 @@ def get_single_user(user_id):
         else:
             response_object = {
                 'status': 'success',
-                'data': {
-                    'id': user_id,
-                    'username': user.username,
-                    'email': user.email,
-                    'active': user.active,
-                    'created_date': user.created_date,
-                },
+                'data': user.to_json(),
             }
             return jsonify(response_object), 200
     except ValueError:
