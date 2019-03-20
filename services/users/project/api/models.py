@@ -15,7 +15,7 @@ class User(db.Model):
     password = db.Column(db.String(255), nullable=False)
     active = db.Column(db.Boolean(), default=True, nullable=False)
     created_date = db.Column(db.DateTime, default=func.now(), nullable=False)
-    admin = db.Column(db.Boolean, default=False, nullable=False)
+    last_login_date = db.Column(db.DateTime, default=func.now(), nullable=False)
 
     def __init__(self, username, email, password):
         self.username = username
@@ -60,4 +60,5 @@ class User(db.Model):
             'email': self.email,
             'active': self.active,
             'created_date': self.created_date,
+            'last_login_date': self.last_login_date,
         }

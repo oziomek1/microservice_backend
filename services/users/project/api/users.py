@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify, request
 from sqlalchemy import exc
 
 from project.api.models import User
+from project.api.admins import Admin
 from project.api.utils import authenticate
 from project.api.utils import is_admin
 from project.api.utils import post_request
@@ -80,6 +81,25 @@ def get_single_user(user_id):
     except ValueError:
         return jsonify(response_object), 404
 
+@users_blueprint.route('/admins/<admin_id>', methods=['GET'])
+def get_single_admin(admin_id):
+    response_object = {
+        'status': 'fail',
+        'message': 'Admin does not exist',
+    }
+    try:
+        admin = Admin.query.filter_by(id=int(admin_id)).first()
+        if not admin:
+            return jsonify(response_object), 404
+        else:
+            response_object = {
+                'status': 'success',
+                'data': admin.to_json(),
+            }
+            return jsonify(response_object), 200
+    except ValueError:
+        return jsonify(response_object), 404
+
 
 @users_blueprint.route('/users', methods=['GET'])
 def get_all_users():
@@ -87,6 +107,16 @@ def get_all_users():
         'status': 'success',
         'data': {
             'users': [user.to_json() for user in User.query.all()],
+        },
+    }
+    return jsonify(response_object)
+
+@users_blueprint.route('/admins', methods=['GET'])
+def get_all_admins():
+    response_object = {
+        'status': 'success',
+        'data': {
+            'admins': [admin.to_json() for admin in Admin.query.all()],
         },
     }
     return jsonify(response_object)
