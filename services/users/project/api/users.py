@@ -81,6 +81,7 @@ def get_single_user(user_id):
     except ValueError:
         return jsonify(response_object), 404
 
+
 @users_blueprint.route('/admins/<admin_id>', methods=['GET'])
 def get_single_admin(admin_id):
     response_object = {
@@ -110,6 +111,7 @@ def get_all_users():
         },
     }
     return jsonify(response_object)
+
 
 @users_blueprint.route('/admins', methods=['GET'])
 def get_all_admins():
