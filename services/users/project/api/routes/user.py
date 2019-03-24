@@ -1,18 +1,18 @@
 from flask import Blueprint, jsonify, request
 from sqlalchemy import exc
 
-from project.api.models import User
-from project.api.admins import Admin
+from project.api.models.user import User
+from project.api.models.admin import Admin
 from project.api.utils import authenticate
 from project.api.utils import is_admin
 from project.api.utils import post_request
 from project import db
 
 
-users_blueprint = Blueprint('users', __name__)
+user_blueprint = Blueprint('users', __name__)
 
 
-@users_blueprint.route('/', methods=['GET', 'POST'])
+@user_blueprint.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
         username = request.form['username']
@@ -23,7 +23,7 @@ def index():
     return jsonify({})
 
 
-@users_blueprint.route('/users/ping', methods=['GET'])
+@user_blueprint.route('/users/ping', methods=['GET'])
 def ping():
     return jsonify({
         'status': 'success',
@@ -31,7 +31,7 @@ def ping():
     })
 
 
-@users_blueprint.route('/users', methods=['POST'])
+@user_blueprint.route('/users', methods=['POST'])
 @authenticate
 def add_user(response):
     post_data, response_object = post_request()
@@ -62,7 +62,7 @@ def add_user(response):
         return jsonify(response_object), 400
 
 
-@users_blueprint.route('/users/<user_id>', methods=['GET'])
+@user_blueprint.route('/users/<user_id>', methods=['GET'])
 def get_single_user(user_id):
     response_object = {
         'status': 'fail',
@@ -82,7 +82,7 @@ def get_single_user(user_id):
         return jsonify(response_object), 404
 
 
-@users_blueprint.route('/admins/<admin_id>', methods=['GET'])
+@user_blueprint.route('/admins/<admin_id>', methods=['GET'])
 def get_single_admin(admin_id):
     response_object = {
         'status': 'fail',
@@ -102,7 +102,7 @@ def get_single_admin(admin_id):
         return jsonify(response_object), 404
 
 
-@users_blueprint.route('/users', methods=['GET'])
+@user_blueprint.route('/users', methods=['GET'])
 def get_all_users():
     response_object = {
         'status': 'success',
@@ -113,7 +113,7 @@ def get_all_users():
     return jsonify(response_object)
 
 
-@users_blueprint.route('/admins', methods=['GET'])
+@user_blueprint.route('/admins', methods=['GET'])
 def get_all_admins():
     response_object = {
         'status': 'success',
