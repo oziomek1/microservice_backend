@@ -315,35 +315,6 @@ class TestUserService(BaseTestCase):
             self.assertTrue(data['status'] == 'fail')
             self.assertTrue(data['message'] == 'Provide valid auth token.')
 
-    # def test_add_user_not_admin(self):
-    #     with self.client:
-    #         username, email, password = initialize_user_for_test()
-    #         response = self.client.post(
-    #             '/auth/login',
-    #             data=json.dumps({
-    #                 'email': email,
-    #                 'password': password
-    #             }),
-    #             content_type='application/json'
-    #         )
-    #         token = json.loads(response.data.decode())['auth_token']
-    #         response = self.client.post(
-    #             '/users',
-    #             data=json.dumps({
-    #                 'username': "another_user",
-    #                 'email': "another@test.com",
-    #                 'password': password,
-    #             }),
-    #             content_type='application/json',
-    #             headers={
-    #                 'Authorization': f'Bearer {token}',
-    #             }
-    #         )
-    #         data = json.loads(response.data.decode())
-    #         self.assertTrue(data['status'] == 'fail')
-    #         self.assertTrue(data['message'] == 'No permission.')
-    #         self.assertEqual(response.status_code, 401)
-
 
 if __name__ == '__main__':
     unittest.main()
