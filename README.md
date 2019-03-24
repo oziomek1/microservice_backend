@@ -83,3 +83,22 @@ User:
 * [BUGFIX]: A fix for a bug
 * [API]: An API has changed, methods or classes have been added or removed; method signatures or return types have changed
 * [PC]: Anything not covered by the above categories, e.g. coding style cleanup, code refactoring
+
+## For Code Review purpose, to check differences of pull request locally / add changes to pull request:
+* locally checkout to master:
+
+`git checkout master`
+
+* fetch from remote:
+
+`git fetch origin`
+
+* checkout pull-request branch locally:
+
+`git checkout -b [PULL_REQUEST_BRANCH_NAME] origin/[PULL_REQUEST_BRANCH_NAME]`
+
+* in case of some new changes: *git add ..., git commit -m ...*
+
+`git push origin` *in case of message "fatal: The upstream branch of your current branch does not match..." use:*
+
+`git push origin HEAD:[PULL_REQUEST_BRANCH_NAME]`
