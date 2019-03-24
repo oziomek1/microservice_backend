@@ -27,10 +27,10 @@ def create_app(script=None):
     migrate.init_app(app, db)
     bcrypt.init_app(app)
 
-    from project.api.users import users_blueprint
-    from project.api.auth import auth_blueprint
+    from project.api.routes.user import user_blueprint
+    from project.api.routes.auth import auth_blueprint
 
-    app.register_blueprint(users_blueprint)
+    app.register_blueprint(user_blueprint)
     app.register_blueprint(auth_blueprint)
 
     @app.shell_context_processor

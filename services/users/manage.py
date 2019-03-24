@@ -4,8 +4,8 @@ import coverage
 from flask.cli import FlaskGroup
 
 from project import create_app, db
-from project.api.models import User
-from project.api.admins import Admin
+from project.api.models.user import User
+from project.api.models.admin import Admin
 
 
 COV = coverage.coverage(
