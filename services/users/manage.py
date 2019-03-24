@@ -4,7 +4,8 @@ import coverage
 from flask.cli import FlaskGroup
 
 from project import create_app, db
-from project.api.models import User
+from project.api.models.user import User
+from project.api.models.admin import Admin
 
 
 COV = coverage.coverage(
@@ -49,6 +50,11 @@ def seed_db():
         username='Jennifer',
         email='jenny@email.com',
         password='jenny_password',
+    ))
+    db.session.add(Admin(
+        username="Josiek",
+        email="josiek@email.com",
+        password="josiek_password",
     ))
     db.session.commit()
 

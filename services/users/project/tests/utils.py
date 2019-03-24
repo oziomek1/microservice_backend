@@ -1,8 +1,8 @@
 from project import db
-from project.api.models import User
+from project.api.models.user import User
 
 
-def add_user(username, email, password, admin=False):
+def add_user(username, email, password):
     user = User(
         username=username,
         email=email,
@@ -10,17 +10,12 @@ def add_user(username, email, password, admin=False):
     )
     db.session.add(user)
     db.session.commit()
-
-    if admin:
-        user = User.query.filter_by(email=email).first()
-        user.admin = True
-        db.session.commit()
     return user
 
 
-def initialize_user_for_test(admin=False):
+def initialize_user_for_test():
     username = 'test'
     email = 'test@test.com'
     password = 'example_password'
-    add_user(username=username, email=email, password=password, admin=admin)
+    add_user(username=username, email=email, password=password)
     return username, email, password
