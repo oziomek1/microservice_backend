@@ -5,7 +5,6 @@ from flask import current_app
 from project import db
 from project.api.models.user import User
 from project.tests.base import BaseTestCase
-from project.tests.base import BaseTestCase
 from project.tests.utils import add_user
 
 

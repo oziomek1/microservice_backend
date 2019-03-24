@@ -344,5 +344,6 @@ class TestUserService(BaseTestCase):
     #         self.assertTrue(data['message'] == 'No permission.')
     #         self.assertEqual(response.status_code, 401)
 
+
 if __name__ == '__main__':
     unittest.main()
