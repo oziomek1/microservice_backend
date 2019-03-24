@@ -4,7 +4,6 @@ from sqlalchemy import exc
 from project.api.models.user import User
 from project.api.models.admin import Admin
 from project.api.utils import authenticate
-from project.api.utils import is_admin
 from project.api.utils import post_request
 from project import db
 
@@ -35,9 +34,6 @@ def ping():
 @authenticate
 def add_user(response):
     post_data, response_object = post_request()
-    if not is_admin(response):
-        response_object['message'] = 'No permission.'
-        return jsonify(response_object), 401
     if not post_data:
         return jsonify(response_object), 400
 

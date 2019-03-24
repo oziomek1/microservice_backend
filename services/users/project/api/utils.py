@@ -38,11 +38,6 @@ def post_request():
     return post_data, response_object
 
 
-def is_admin(user_id):
-    # return User.query.filter_by(id=user_id).first().admin
-    return True
-
-
 def add_admin_user(username, email, password):
     user = User(
         username=username,
