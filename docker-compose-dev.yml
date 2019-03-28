@@ -4,12 +4,12 @@ version: '3.6'
 
 services:
 
-  users:
+  backend:
     build:
-      context: ./services/users
+      context: ./services/backend
       dockerfile: Dockerfile-dev
     volumes:
-      - './services/users:/usr/src/app'
+      - './services/backend:/usr/src/app'
     ports:
       - 5001:5000
     environment:
@@ -23,7 +23,7 @@ services:
 
   users-db:
     build:
-      context: ./services/users/project/db_postgresql
+      context: ./services/backend/project/db_postgresql
       dockerfile: Dockerfile
     ports:
       - 5346:5432
@@ -39,7 +39,7 @@ services:
 #    ports:
 #      - 80:80
 #    depends_on:
-#      - users
+#      - backend
 
   swagger:
     container_name: swagger
@@ -51,4 +51,4 @@ services:
     environment:
       - URL=swagger.json
     depends_on:
-      - users
+      - backend

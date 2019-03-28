@@ -30,7 +30,7 @@ def recreate_db():
     db.session.commit()
 
 
-@cli.command()
+@cli.command('test')
 def test():
     tests = unittest.TestLoader().discover('project/tests', pattern='test*.py')
     result = unittest.TextTestRunner(verbosity=2).run(tests)
@@ -64,8 +64,8 @@ def seed_db():
     db.session.commit()
 
 
-@cli.command()
-def cov():
+@cli.command('test_coverage')
+def test_coverage():
     """Unit tests with coverage"""
     tests = unittest.TestLoader().discover('project/tests', pattern='test*.py')
     result = unittest.TextTestRunner(verbosity=2).run(tests)

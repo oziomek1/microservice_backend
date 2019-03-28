@@ -6,7 +6,7 @@
 
 Run code style test:
 
-`docker-compose -f docker-compose-dev.yml run users flake8 project`
+`docker-compose -f docker-compose-dev.yml run backend flake8 project`
 
 
 Build the images:
@@ -19,19 +19,19 @@ Build & run the containers:
 
 Recreate the database:
 
-`docker-compose -f docker-compose-dev.yml run users python manage.py recreate_db`
+`docker-compose -f docker-compose-dev.yml run backend python manage.py recreate_db`
 
 Seed the database with initial values:
 
-`docker-compose -f docker-compose-dev.yml run users python manage.py seed_db`
+`docker-compose -f docker-compose-dev.yml run backend python manage.py seed_db`
 
 Run the tests:
 
-`docker-compose -f docker-compose-dev.yml run users python manage.py test`
+`docker-compose -f docker-compose-dev.yml run backend python manage.py test`
 
 Run the tests with code coverage:
 
-`docker-compose -f docker-compose-dev.yml run users python manage.py cov`
+`docker-compose -f docker-compose-dev.yml run backend python manage.py test_coverage`
 
 Stop the container:
 
@@ -68,7 +68,19 @@ User:
 * id (autoincrement, primary key)
 * username
 * email
+* password
 * active (default True)
+* created_date
+* last_login_date
+
+Admin:
+* id (autoincrement, primary key)
+* username
+* email
+* password
+* active
+* created_date
+* last_login_date
 
 ## Configs:
 * Development
