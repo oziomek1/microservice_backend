@@ -1,5 +1,4 @@
 import json
-import unittest
 from project.tests.base import BaseTestCase
 
 
