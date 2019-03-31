@@ -22,14 +22,6 @@ def index():
     return jsonify({})
 
 
-@user_blueprint.route('/users/ping', methods=['GET'])
-def ping():
-    return jsonify({
-        'status': 'success',
-        'message': 'ping!'
-    })
-
-
 @user_blueprint.route('/users', methods=['POST'])
 @authenticate
 def add_user(response):
