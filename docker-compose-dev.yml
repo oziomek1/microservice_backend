@@ -5,6 +5,7 @@ version: '3.6'
 services:
 
   backend:
+    container_name: "backend"
     build:
       context: ./services/backend
       dockerfile: Dockerfile-dev
@@ -22,6 +23,7 @@ services:
       - users-db
 
   users-db:
+    container_name: "users-database"
     build:
       context: ./services/backend/project/db_postgresql
       dockerfile: Dockerfile
@@ -31,24 +33,58 @@ services:
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=admin
 
-#  nginx:
+  nginx:
+    container_name: "nginx"
+    image: nginx:1.15.8-alpine
+    volumes:
+      - ./nginx/dev.conf:/etc/nginx/conf.d/dev.conf
+    restart: always
+    ports:
+      - 8084:8084
+    depends_on:
+      - backend
+
+#  swagger:
+#    container_name: "swagger"
 #    build:
-#      context: ./services/nginx
+#      context: ./services/swagger
 #      dockerfile: Dockerfile-dev
-#    restart: always
 #    ports:
-#      - 80:80
+#      - 3008:8080
+#    volumes:
+#      - ./services/swagger/swagger.json:/swagger.json
+#    environment:
+#      - SWAGGER_JSON=/swagger.json
+#      - BASE_URL=/swagger
 #    depends_on:
 #      - backend
 
-  swagger:
-    container_name: swagger
-    build:
-      context: ./services/swagger
-      dockerfile: Dockerfile-dev
+  swagger-editor:
+    container_name: "swagger-editor"
+    image: swaggerapi/swagger-editor
     ports:
-      - '3008:8080'
+      - 8082:8080
+
+  swagger-ui:
+    container_name: "swagger-ui"
+    image: swaggerapi/swagger-ui
+    ports:
+      - 8081:8080
+    volumes:
+      - ./services/swagger/swagger.json:/swagger.json
     environment:
-      - URL=swagger.json
+      SWAGGER_JSON: /swagger.json
+      # API_URL: ""
     depends_on:
       - backend
+
+#  swagger-api:
+#    container_name: "swagger-api"
+#    image: danielgtaylor/apisprout
+#    ports:
+#      - 8083:8000q
+#    volumes:
+#      - ./services/swagger/swagger.json:/swagger.json
+#    command: /swagger.json
+#    depends_on:
+#      - backend
