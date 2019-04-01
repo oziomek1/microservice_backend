@@ -3,13 +3,13 @@
   "info": {
     "version": "1.0.0",
     "title": "Users and Auth Service",
-    "description": "User and Auth server spec for documenting services. You can edit this file at [http://localhost:8082](localhost:8082). After edit save this file and replace with your currently used \"swagger.json\" file."
+    "description": "User and Auth server spec for documenting services. You can edit this file at [http://localhost:8082](http://localhost:8082). After edit save this file and replace with your currently used \"swagger.json\" file."
   },
   "host": "127.0.0.1:5001",
   "tags": [
     {
-      "name": "user",
-      "description": "Everything about users"
+      "name": "admin",
+      "description": "Everything about admin"
     },
     {
       "name": "auth",
@@ -17,7 +17,11 @@
     },
     {
       "name": "ping",
-      "description": "Check if server is up beyond DB interaction"
+      "description": "Check server responding correctly"
+    },
+    {
+      "name": "user",
+      "description": "Everything about users"
     }
   ],
   "schemes": [
@@ -45,7 +49,28 @@
         }
       }
     },
-    "/users": {
+    "/": {
+      "get": {
+        "tags": [
+          "ping"
+        ],
+        "summary": "Sanity server check",
+        "description": "Returns empty json {}",
+        "operationId": "index",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation"
+          }
+        }
+      }
+    },
+    "/user": {
       "post": {
         "tags": [
           "user"
@@ -95,7 +120,7 @@
         }
       }
     },
-    "/users/{id}": {
+    "/user/{id}": {
       "get": {
         "tags": [
           "user"
