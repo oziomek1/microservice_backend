@@ -10,6 +10,13 @@ from project.tests.base import BaseTestCase
 
 class TestUserService(BaseTestCase):
 
+    def test_user_is_accessible(self):
+        with self.client:
+            response = self.client.get('/user')
+            data = json.loads(response.data.decode())
+            self.assertEqual('success', data['status'])
+            self.assertEqual(response.status_code, 200)
+
     def test_add_user(self):
         """Ensure new user can be added to database"""
         with self.client:
@@ -24,7 +31,7 @@ class TestUserService(BaseTestCase):
             )
             token = json.loads(response.data.decode())['auth_token']
             response = self.client.post(
-                '/users',
+                '/user',
                 data=json.dumps({
                     'username': 'Tom',
                     'email': 'tom@email.com',
@@ -54,7 +61,7 @@ class TestUserService(BaseTestCase):
             )
             token = json.loads(response.data.decode())['auth_token']
             response = self.client.post(
-                '/users',
+                '/user',
                 data=json.dumps({}),
                 content_type='application/json',
                 headers={
@@ -80,7 +87,7 @@ class TestUserService(BaseTestCase):
             )
             token = json.loads(response.data.decode())['auth_token']
             response = self.client.post(
-                '/users',
+                '/user',
                 data=json.dumps({
                     'email': 'wrong@email.com',
                     'password': 'example_password',
@@ -109,7 +116,7 @@ class TestUserService(BaseTestCase):
             )
             token = json.loads(response.data.decode())['auth_token']
             response = self.client.post(
-                '/users',
+                '/user',
                 data=json.dumps({
                     'username': 'wrong',
                     'email': 'wrong@email.com',
@@ -137,7 +144,7 @@ class TestUserService(BaseTestCase):
             )
             token = json.loads(response.data.decode())['auth_token']
             response = self.client.post(
-                '/users',
+                '/user',
                 data=json.dumps({
                     'username': 'wrong',
                     'password': 'example_password',
@@ -166,7 +173,7 @@ class TestUserService(BaseTestCase):
             )
             token = json.loads(response.data.decode())['auth_token']
             self.client.post(
-                '/users',
+                '/user',
                 data=json.dumps({
                     'username': 'Tom',
                     'email': 'tom@email.com',
@@ -178,7 +185,7 @@ class TestUserService(BaseTestCase):
                 }
             )
             response = self.client.post(
-                '/users',
+                '/user',
                 data=json.dumps({
                     'username': 'Tom',
                     'email': 'tom@email.com',
@@ -202,7 +209,7 @@ class TestUserService(BaseTestCase):
             password='example_password',
         )
         with self.client:
-            response = self.client.get(f'/users/{user.id}')
+            response = self.client.get(f'/user/{user.id}')
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 200)
             self.assertIn('Tom', data['data']['username'])
@@ -212,7 +219,7 @@ class TestUserService(BaseTestCase):
     def test_single_user_no_id(self):
         """Ensure error with no id provided"""
         with self.client:
-            response = self.client.get('/users/not_existing_id')
+            response = self.client.get('/user/not_existing_id')
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 404)
             self.assertIn('User does not exist', data['message'])
@@ -221,7 +228,7 @@ class TestUserService(BaseTestCase):
     def test_single_user_incorrect_id(self):
         """Ensure error with incorrect id"""
         with self.client:
-            response = self.client.get('/users/-1')
+            response = self.client.get('/user/-1')
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 404)
             self.assertIn('User does not exist', data['message'])
@@ -240,36 +247,15 @@ class TestUserService(BaseTestCase):
             password='example_password',
         )
         with self.client:
-            response = self.client.get('/users')
+            response = self.client.get('/user')
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 200)
-            self.assertEqual(len(data['data']['users']), 2)
-            self.assertIn('Tom', data['data']['users'][0]['username'])
-            self.assertIn('tom@email.com', data['data']['users'][0]['email'])
-            self.assertIn('Jerry', data['data']['users'][1]['username'])
-            self.assertIn('jerry@email.com', data['data']['users'][1]['email'])
+            self.assertEqual(len(data['data']['user']), 2)
+            self.assertIn('Tom', data['data']['user'][0]['username'])
+            self.assertIn('tom@email.com', data['data']['user'][0]['email'])
+            self.assertIn('Jerry', data['data']['user'][1]['username'])
+            self.assertIn('jerry@email.com', data['data']['user'][1]['email'])
             self.assertIn('success', data['status'])
-
-    def test_main_route_empty(self):
-        """Ensure main is empty when no users"""
-        response = self.client.get('/')
-        self.assertEqual(response.status_code, 200)
-        self.assertIn(b'{}', response.data)
-
-    def test_main_add_user(self):
-        """Ensure new user can be added"""
-        with self.client:
-            response = self.client.post(
-                '/',
-                data=dict(
-                    username='tom',
-                    email='tom@email.com',
-                    password='example_password',
-                ),
-                follow_redirects=True
-            )
-            self.assertEqual(response.status_code, 200)
-            self.assertIn(b'{}', response.data)
 
     def test_add_user_inactive(self):
         username = 'test'
@@ -292,7 +278,7 @@ class TestUserService(BaseTestCase):
             )
             token = json.loads(response.data.decode())['auth_token']
             response = self.client.post(
-                '/users',
+                '/user',
                 data=json.dumps({
                     'username': username,
                     'email': email,
