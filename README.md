@@ -51,17 +51,22 @@ Access PostgreSQL via psql?
 
 ## Endpoints:
 
-`localhost:5001/users`: [GET] - get all users
+`localhost:5001/user`: [GET] - get all users
 
-`localhost:5001/users`: [POST] - add new user
+`localhost:5001/user`: [POST] - add new user
 
-`localhost:5001/users/[<id>]` [GET] - get user with id if exists
+`localhost:5001/user/[<id>]` [GET] - get user with id if exists
+
+`localhost:5001/admin`: [GET] - get all admins
 
 `localhost:5001/` [GET] - empty {}
 
-`localhost:5001/users/ping` - [GET] - to check if application is on in case of DB problems
+`localhost:5001/ping` - [GET] - to check if application is on in case of DB problems
 
-`localhost:3008/` - Swagger API, currently default example from swagger.io
+`localhost:8081/` - Swagger UI, API currently used endpoints
+
+`localhost:8082/` - Swagger Editor, help edits Swagger UI config directly (keep in mind Yaml -> Json conversion)
+
 
 ## Data:
 User:

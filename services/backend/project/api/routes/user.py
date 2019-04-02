@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify
 from sqlalchemy import exc
 
 from project.api.models.user import User
@@ -8,21 +8,10 @@ from project.api.utils import post_request
 from project import db
 
 
-user_blueprint = Blueprint('users', __name__)
+user_blueprint = Blueprint('user', __name__)
 
 
-@user_blueprint.route('/', methods=['GET', 'POST'])
-def index():
-    if request.method == 'POST':
-        username = request.form['username']
-        email = request.form['email']
-        password = request.form['password']
-        db.session.add(User(username=username, email=email, password=password))
-        db.session.commit()
-    return jsonify({})
-
-
-@user_blueprint.route('/users', methods=['POST'])
+@user_blueprint.route('/user', methods=['POST'])
 @authenticate
 def add_user(response):
     post_data, response_object = post_request()
@@ -50,7 +39,7 @@ def add_user(response):
         return jsonify(response_object), 400
 
 
-@user_blueprint.route('/users/<user_id>', methods=['GET'])
+@user_blueprint.route('/user/<user_id>', methods=['GET'])
 def get_single_user(user_id):
     response_object = {
         'status': 'fail',
@@ -70,7 +59,7 @@ def get_single_user(user_id):
         return jsonify(response_object), 404
 
 
-@user_blueprint.route('/admins/<admin_id>', methods=['GET'])
+@user_blueprint.route('/admin/<admin_id>', methods=['GET'])
 def get_single_admin(admin_id):
     response_object = {
         'status': 'fail',
@@ -90,23 +79,12 @@ def get_single_admin(admin_id):
         return jsonify(response_object), 404
 
 
-@user_blueprint.route('/users', methods=['GET'])
+@user_blueprint.route('/user', methods=['GET'])
 def get_all_users():
     response_object = {
         'status': 'success',
         'data': {
-            'users': [user.to_json() for user in User.query.all()],
-        },
-    }
-    return jsonify(response_object)
-
-
-@user_blueprint.route('/admins', methods=['GET'])
-def get_all_admins():
-    response_object = {
-        'status': 'success',
-        'data': {
-            'admins': [admin.to_json() for admin in Admin.query.all()],
+            'user': [user.to_json() for user in User.query.all()],
         },
     }
     return jsonify(response_object)
