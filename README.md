@@ -114,3 +114,8 @@ Admin:
 `git push origin` *in case of message "fatal: The upstream branch of your current branch does not match..." use:*
 
 `git push origin HEAD:[PULL_REQUEST_BRANCH_NAME]`
+
+## SwaggerUI
+
+<img src="ui_1.png" width="80%/>
+<img src="ui_2.png" width="80%/>
