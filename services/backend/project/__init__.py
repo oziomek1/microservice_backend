@@ -22,11 +22,28 @@ def create_app(script=None):
     app_settings = os.getenv('APP_SETTINGS')
     app.config.from_object(app_settings)
 
+    _initialize_extensions(app)
+    _register_blueprints(app)
+
+    # shell context for flask cli
+    @app.shell_context_processor
+    def ctx():
+        return {
+            'app': app,
+            'db': db,
+        }
+
+    return app
+
+
+def _initialize_extensions(app):
     db.init_app(app)
     toolbar.init_app(app)
     migrate.init_app(app, db)
     bcrypt.init_app(app)
 
+
+def _register_blueprints(app):
     from project.api.routes.admin import admin_blueprint
     from project.api.routes.auth import auth_blueprint
     from project.api.routes.ping import ping_blueprint
@@ -36,12 +53,3 @@ def create_app(script=None):
     app.register_blueprint(auth_blueprint)
     app.register_blueprint(ping_blueprint)
     app.register_blueprint(user_blueprint)
-
-    @app.shell_context_processor
-    def ctx():
-        return {
-            'app': app,
-            'db': db,
-        }
-
-    return app
