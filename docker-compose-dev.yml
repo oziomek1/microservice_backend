@@ -21,6 +21,7 @@ services:
       - SECRET_KEY=my_secret_key
     depends_on:
       - users-db
+      - mongo-db
 
   users-db:
     container_name: "users-database"
@@ -32,6 +33,13 @@ services:
     environment:
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=admin
+
+  mongo-db:
+    container_name: "crawler-database"
+    image: mongo:3.6-xenial
+    volumes:
+      - './services/backend/data:/usr/src/app/'
+    command: mongod
 
   nginx:
     container_name: "nginx"
