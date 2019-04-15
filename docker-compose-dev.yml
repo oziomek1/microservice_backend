@@ -10,12 +10,12 @@ services:
       context: ./services/backend
       dockerfile: Dockerfile-dev
     volumes:
-      - './services/backend:/usr/src/app'
+      - './services/backend:/app'
     ports:
       - 5001:5000
     environment:
       - FLASK_ENV=developmentdocker-compose
-      - APP_SETTINGS=project.config.DevelopmentConfig
+      - APP_SETTINGS=src.config.DevelopmentConfig
       - DATABASE_URL=postgres://admin:admin@users-db:5432/users_dev
       - DATABASE_TEST_URL=postgres://admin:admin@users-db:5432/users_test
       - SECRET_KEY=my_secret_key
@@ -25,7 +25,7 @@ services:
   users-db:
     container_name: "users-database"
     build:
-      context: ./services/backend/project/db_postgresql
+      context: ./services/backend/src/db_postgresql
       dockerfile: Dockerfile
     ports:
       - 5346:5432

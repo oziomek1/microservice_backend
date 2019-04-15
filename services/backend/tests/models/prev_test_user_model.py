@@ -2,10 +2,10 @@ import unittest
 
 from sqlalchemy.exc import IntegrityError
 
-from project import db
-from project.api.models.user import User
-from project.tests.utils import add_user
-from project.tests.base import BaseTestCase
+from src import db
+from src.api.models.user import User
+from src.tests.utils import add_user
+from src.tests.base import BaseTestCase
 
 
 class TestUserModel(BaseTestCase):

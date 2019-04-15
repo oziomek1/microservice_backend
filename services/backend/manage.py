@@ -3,17 +3,17 @@ import unittest
 import coverage
 from flask.cli import FlaskGroup
 
-from project import create_app, db
-from project.api.models.user import User
-from project.api.models.admin import Admin
+from src import create_app, db
+from src.api.models.user import User
+from src.api.models.admin import Admin
 
 
 COV = coverage.coverage(
     branch=True,
-    include='project/*',
+    include='src/*',
     omit=[
-        'project/tests/*',
-        'project/config.py',
+        'tests/*',
+        'src/config.py',
     ]
 )
 COV.start()
@@ -32,7 +32,7 @@ def recreate_db():
 
 @cli.command('test')
 def test():
-    tests = unittest.TestLoader().discover('project/tests', pattern='test*.py')
+    tests = unittest.TestLoader().discover('tests', pattern='test*.py')
     result = unittest.TextTestRunner(verbosity=2).run(tests)
     if result.wasSuccessful():
         return 0
@@ -67,7 +67,7 @@ def seed_db():
 @cli.command('test_coverage')
 def test_coverage():
     """Unit tests with coverage"""
-    tests = unittest.TestLoader().discover('project/tests', pattern='test*.py')
+    tests = unittest.TestLoader().discover('tests', pattern='test*.py')
     result = unittest.TextTestRunner(verbosity=2).run(tests)
     if result.wasSuccessful():
         COV.stop()

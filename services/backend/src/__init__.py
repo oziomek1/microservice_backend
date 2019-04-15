@@ -44,10 +44,10 @@ def _initialize_extensions(app):
 
 
 def _register_blueprints(app):
-    from project.api.routes.admin import admin_blueprint
-    from project.api.routes.auth import auth_blueprint
-    from project.api.routes.ping import ping_blueprint
-    from project.api.routes.user import user_blueprint
+    from src.api.routes.admin import admin_blueprint
+    from src.api.routes.auth import auth_blueprint
+    from src.api.routes.ping import ping_blueprint
+    from src.api.routes.user import user_blueprint
 
     app.register_blueprint(admin_blueprint)
     app.register_blueprint(auth_blueprint)
