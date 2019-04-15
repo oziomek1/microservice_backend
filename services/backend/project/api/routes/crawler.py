@@ -3,7 +3,6 @@ from pymongo import errors
 
 from project.api.utils import post_request
 from project.api.models.task import Task
-from project.api.enums.task_status import TaskStatus
 from project import crawlerdb
 
 
@@ -29,7 +28,7 @@ def start_crawl():
     task = Task.create_task(id=1, item=search_item)
     try:
         tasks.insert_one(jsonify(task))
-    except errors.DuplicateKeyError as e:
+    except errors.DuplicateKeyError:
         return jsonify('DuplicateKeyError'), 404
 
     response_object['status'] = 'success'
