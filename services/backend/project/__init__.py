@@ -1,4 +1,8 @@
+import datetime
+import json
 import os
+
+from bson.objectid import ObjectId
 
 from flask import Flask
 from flask_bcrypt import Bcrypt
@@ -6,12 +10,15 @@ from flask_cors import CORS
 from flask_debugtoolbar import DebugToolbarExtension
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
+from pymongo import MongoClient
 
 
 bcrypt = Bcrypt()
 db = SQLAlchemy()
 migrate = Migrate()
 toolbar = DebugToolbarExtension()
+mongo = MongoClient('mongodb://mongo-db:27017/')
+crawlerdb = mongo['crawlerdb']
 
 
 def create_app(script=None):
@@ -21,6 +28,7 @@ def create_app(script=None):
 
     app_settings = os.getenv('APP_SETTINGS')
     app.config.from_object(app_settings)
+    app.json_encoder = JSONEncoder
 
     _initialize_extensions(app)
     _register_blueprints(app)
@@ -48,8 +56,20 @@ def _register_blueprints(app):
     from project.api.routes.auth import auth_blueprint
     from project.api.routes.ping import ping_blueprint
     from project.api.routes.user import user_blueprint
+    from project.api.routes.crawler import crawler_blueprint
 
     app.register_blueprint(admin_blueprint)
     app.register_blueprint(auth_blueprint)
     app.register_blueprint(ping_blueprint)
     app.register_blueprint(user_blueprint)
+    app.register_blueprint(crawler_blueprint)
+
+
+class JSONEncoder(json.JSONEncoder):
+    """extend json-encoder"""
+    def default(self, obj):
+        if isinstance(obj, ObjectId):
+            return str(obj)
+        if isinstance(obj, datetime.datetime):
+            return str(obj)
+        return json.JSONEncoder.default(self, obj)

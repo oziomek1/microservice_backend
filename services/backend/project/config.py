@@ -11,6 +11,8 @@ class BaseConfig:
     BCRYPT_LOG_ROUND = 12
     TOKEN_EXPIRATION_DAYS = 0
     TOKEN_EXPIRATION_SECONDS = 3600
+    MONGO_DBNAME = 'crawlerdb'
+    MONGO_URI = 'mongodb://mongo-db:27017/'
 
 
 class DevelopmentConfig(BaseConfig):
