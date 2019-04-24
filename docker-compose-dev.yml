@@ -23,6 +23,28 @@ services:
       - users-db
       - mongo-db
 
+  celery:
+    container_name: "celery"
+    build:
+      context: ./services/backend
+      dockerfile: Dockerfile-dev
+    entrypoint: celery worker -A project.worker.worker:celery --loglevel=INFO
+    environment:
+      CELERY_BACKEND: 'redis://localhost:6379/0'
+      CELERY_BROKER: 'redis://localhost:6379/0'
+    depends_on:
+      - redis
+
+  redis:
+    container_name: "redis"
+    image: redis:3.0-alpine
+    ports:
+      - '6379:6379'
+    volumes:
+      - './services/backend/data:/usr/src/app/redis/'
+    entrypoint: redis-server --appendonly yes
+    restart: always
+
   users-db:
     container_name: "users-database"
     build:
@@ -52,21 +74,6 @@ services:
     depends_on:
       - backend
 
-#  swagger:
-#    container_name: "swagger"
-#    build:
-#      context: ./services/swagger
-#      dockerfile: Dockerfile-dev
-#    ports:
-#      - 3008:8080
-#    volumes:
-#      - ./services/swagger/swagger.json:/swagger.json
-#    environment:
-#      - SWAGGER_JSON=/swagger.json
-#      - BASE_URL=/swagger
-#    depends_on:
-#      - backend
-
   swagger-editor:
     container_name: "swagger-editor"
     image: swaggerapi/swagger-editor
@@ -85,14 +92,3 @@ services:
       # API_URL: ""
     depends_on:
       - backend
-
-#  swagger-api:
-#    container_name: "swagger-api"
-#    image: danielgtaylor/apisprout
-#    ports:
-#      - 8083:8000q
-#    volumes:
-#      - ./services/swagger/swagger.json:/swagger.json
-#    command: /swagger.json
-#    depends_on:
-#      - backend

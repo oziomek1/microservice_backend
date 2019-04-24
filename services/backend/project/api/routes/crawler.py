@@ -1,36 +1,48 @@
-from flask import Blueprint, jsonify, request
-from pymongo import errors
+from flask import Blueprint, jsonify, url_for
 
-from project.api.utils import post_request
-from project.api.models.task import Task
 from project import crawlerdb
+from project.worker.worker import execute_task
 
 
 crawler_blueprint = Blueprint('crawler', __name__)
 tasks = crawlerdb.tasks
 
 
-@crawler_blueprint.route('/crawler', methods=['GET', 'POST'])
-def start_crawl():
-    if request.method == "GET":
-        response_object = {
-            'status': 'success',
-            'data': {
-                'task': tasks.find_one({}),
-            },
+@crawler_blueprint.route('/crawler/<phrase>', methods=['GET', 'POST'])
+def longtask(phrase):
+    task = execute_task.apply_async((phrase,))
+    return jsonify({
+        'task_id': task.id,
+        'Location': url_for('crawler.task_info', task_id=task.id)
+    }), 202
+
+
+@crawler_blueprint.route('/crawler_info/<task_id>')
+def task_info(task_id):
+    task = execute_task.AsyncResult(task_id)
+    if task.state == 'PENDING':
+        response = {
+            'task_id': task_id,
+            'state': task.state,
+            'status': 'Pending...',
+            'argument': task.info.get('argument'),
+
         }
-        return jsonify(response_object), 200
-    post_data, response_object = post_request()
-    if not post_data:
-        return jsonify(response_object), 400
-
-    search_item = post_data.get('item')
-    task = Task.create_task(id=1, item=search_item)
-    try:
-        tasks.insert_one(jsonify(task))
-    except errors.DuplicateKeyError:
-        return jsonify('DuplicateKeyError'), 404
-
-    response_object['status'] = 'success'
-    response_object['message'] = 'Successfully passed item {}, task_id {}'.format(search_item, task.id)
-    return jsonify(response_object), 201
+    elif task.state != 'FAILURE':
+        response = {
+            'task_id': task_id,
+            'state': task.state,
+            'status': task.info.get('status', ''),
+            'argument': task.info.get('argument'),
+        }
+        if 'result' in task.info:
+            response['result'] = task.info['result']
+    else:
+        # something went wrong in the background job
+        response = {
+            'task_id': task_id,
+            'state': task.state,
+            'status': str(task.info),
+            'argument': task.info.get('argument'),
+        }
+    return jsonify(response), 200
