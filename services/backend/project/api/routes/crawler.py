@@ -6,6 +6,7 @@ from project.worker.worker import execute_task
 
 crawler_blueprint = Blueprint('crawler', __name__)
 tasks = crawlerdb.tasks
+mycol = crawlerdb["results"]
 
 
 @crawler_blueprint.route('/crawler/<phrase>', methods=['GET', 'POST'])
@@ -15,6 +16,17 @@ def longtask(phrase):
         'task_id': task.id,
         'Location': url_for('crawler.task_info', task_id=task.id)
     }), 202
+
+
+@crawler_blueprint.route('/crawler_results', methods=['GET'])
+def get_all_results():
+    results = []
+    for x in mycol.find():
+        response_object = {
+            'results': x,
+        }
+        results.append(response_object)
+    return jsonify(results)
 
 
 @crawler_blueprint.route('/crawler_info/<task_id>')
