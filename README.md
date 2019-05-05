@@ -122,5 +122,5 @@ Admin:
 
 ## SwaggerUI
 
-<img src="ui_1.png" width="80%"/>
-<img src="ui_2.png" width="80%"/>
+<img src="img/readme/ui_1.png" width="80%"/>
+<img src="img/readme/ui_2.png" width="80%"/>
