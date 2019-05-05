@@ -2,18 +2,22 @@
   "swagger": "2.0",
   "info": {
     "version": "1.0.0",
-    "title": "Users and Auth Service",
-    "description": "User and Auth server spec for documenting services. You can edit this file at [http://localhost:8082](http://localhost:8082). After edit save this file and replace with your currently used \"swagger.json\" file."
+    "title": "Crawler App Service",
+    "description": "Crawler app server spec for documenting services. You can edit this file at [http://localhost:8082](http://localhost:8082). After edit save this file and replace with your currently used \"swagger.json\" file."
   },
   "host": "127.0.0.1:5001",
   "tags": [
     {
       "name": "admin",
-      "description": "Everything about admin"
+      "description": "Admin service"
     },
     {
       "name": "auth",
-      "description": "Everything about auth"
+      "description": "Auth service"
+    },
+    {
+      "name": "crawler",
+      "description": "Crawler service"
     },
     {
       "name": "ping",
@@ -21,13 +25,199 @@
     },
     {
       "name": "user",
-      "description": "Everything about users"
+      "description": "Users service"
     }
   ],
   "schemes": [
     "http"
   ],
   "paths": {
+    "/admin": {
+      "get": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Show all admins",
+        "description": "",
+        "operationId": "getAdmins",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "schema": {
+              "$ref": "#/definitions/Admin"
+            }
+          }
+        }
+      }
+    },
+    "/admin/{id}": {
+      "get": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Get admin by admin ID",
+        "description": "",
+        "operationId": "getAdminByID",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The ID that needs to be fetched. Use 1 for testing. ",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "schema": {
+              "$ref": "#/definitions/Admin"
+            }
+          },
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "Admin not found"
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Login",
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "email",
+            "description": "User email address",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "password",
+            "in": "query",
+            "description": "User password",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          },
+          "400": {
+            "description": "Invalid operation"
+          },
+          "404": {
+            "description": "User not found"
+          },
+          "500": {
+            "description": "Try again"
+          }
+        }
+      }
+    },
+    "/auth/logout": {
+      "get": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "Logout",
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Invalid token"
+          }
+        }
+      }
+    },
+    "/crawler/{phrase}": {
+      "post": {
+        "tags": [
+          "crawler"
+        ],
+        "summary": "Execute crawler task",
+        "description": "Execution of long async task, scheduled for crawler",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "phrase",
+            "in": "path",
+            "required": true,
+            "description": "Phrase for crawler",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Task accepted"
+          }
+        }
+      }
+    },
+    "/crawler_info/{task_id}": {
+      "get": {
+        "tags": [
+          "crawler"
+        ],
+        "summary": "Crawler task results",
+        "description": "Result of async task, scheduled for crawler. Data at this endpoint changes during task execution.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "task_id",
+            "in": "path",
+            "required": true,
+            "description": "ID of executed task",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation"
+          }
+        }
+      }
+    },
     "/ping": {
       "get": {
         "tags": [
@@ -44,7 +234,7 @@
         ],
         "responses": {
           "200": {
-            "description": "successful operation"
+            "description": "Successful operation"
           }
         }
       }
@@ -65,7 +255,7 @@
         ],
         "responses": {
           "200": {
-            "description": "successful operation"
+            "description": "Successful operation"
           }
         }
       }
@@ -106,7 +296,7 @@
         ],
         "responses": {
           "201": {
-            "description": "successful operation"
+            "description": "Successful operation"
           },
           "400": {
             "description": "Invalid payload"
@@ -116,6 +306,25 @@
           },
           "403": {
             "description": "Forbidden"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Show all users",
+        "description": "",
+        "operationId": "getUsers",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
           }
         }
       }
@@ -142,7 +351,7 @@
         ],
         "responses": {
           "200": {
-            "description": "successful operation",
+            "description": "Successful operation",
             "schema": {
               "$ref": "#/definitions/User"
             }
@@ -158,27 +367,63 @@
     }
   },
   "definitions": {
+    "Admin": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64",
+          "example": 1
+        },
+        "username": {
+          "type": "string",
+          "example": "Admin_Tom"
+        },
+        "email": {
+          "type": "string",
+          "example": "admin@email.com"
+        },
+        "active": {
+          "type": "boolean",
+          "example": true
+        },
+        "crated_date": {
+          "type": "string",
+          "example": "2019-05-05 11:18:08.572152"
+        },
+        "last_login_date": {
+          "type": "string",
+          "example": "2019-05-05 11:18:08.572152"
+        }
+      }
+    },
     "User": {
       "type": "object",
       "properties": {
         "id": {
           "type": "integer",
-          "format": "int64"
+          "format": "int64",
+          "example": 1
         },
         "username": {
-          "type": "string"
+          "type": "string",
+          "example": "Tom"
         },
         "email": {
-          "type": "string"
+          "type": "string",
+          "example": "email@email.com"
         },
         "active": {
-          "type": "boolean"
+          "type": "boolean",
+          "example": true
         },
         "crated_date": {
-          "type": "string"
+          "type": "string",
+          "example": "2019-05-05 10:38:24.385554"
         },
         "last_login_date": {
-          "type": "string"
+          "type": "string",
+          "example": "2019-05-05 10:38:24.385554"
         }
       }
     }
