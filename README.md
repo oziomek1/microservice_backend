@@ -49,6 +49,14 @@ Access PostgreSQL via psql?
 
 `docker-compose -f docker-compose-dev.yml exec users-db psql -U [YOUR NAME: usually postgres or admin]`
 
+Access gunicorn logger in follow mode
+
+* Open new terminal
+* Get docker *CONTAINER_ID* for Image `microservices_backend_backend` -> `docker ps`
+* Run container `docker exec -it *CONTAINER_ID* /bin/bash`
+* Open *gunicorn.log* file `tail -f gunicorn.log`
+
+
 ## Endpoints:
 
 `localhost:5001/user`: [GET] - get all users
@@ -58,6 +66,22 @@ Access PostgreSQL via psql?
 `localhost:5001/user/[<id>]` [GET] - get user with id if exists
 
 `localhost:5001/admin`: [GET] - get all admins
+
+`localhost:5001/admin/[<id>]`: [GET] - get admin with id if exists
+
+`localhost:5001/auth/registration`: [POST] - register new user
+
+`localhost:5001/auth/login`: [POST] - login existing user
+
+`localhost:5001/auth/logout`: [GET] - logout logged in user
+
+`localhost:5001/auth/status`: [GET] - get currently logged in user data
+
+`localhost:5001/crawler/<phrase>`: [GET, POST] - start async task
+
+`localhost:5001/crawler_results`: [GET] - get all tasks from database
+
+`localhost:5001/crawler_info/<task_id>`: [GET] - check status of async task
 
 `localhost:5001/` [GET] - empty {}
 

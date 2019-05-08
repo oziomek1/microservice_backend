@@ -15,6 +15,9 @@ user_blueprint = Blueprint('user', __name__)
 @authenticate
 def add_user(response):
     post_data, response_object = post_request()
+
+    from flask import current_app
+    current_app.logger.info('/user/[POST] "post_data" %s', str(post_data))
     if not post_data:
         return jsonify(response_object), 400
 
@@ -47,6 +50,9 @@ def get_single_user(user_id):
     }
     try:
         user = User.query.filter_by(id=int(user_id)).first()
+
+        from flask import current_app
+        current_app.logger.info('/user/%s "user" %s', str(user_id), str(user))
         if not user:
             return jsonify(response_object), 404
         else:
@@ -67,6 +73,9 @@ def get_single_admin(admin_id):
     }
     try:
         admin = Admin.query.filter_by(id=int(admin_id)).first()
+
+        from flask import current_app
+        current_app.logger.info('/admin/%s "admin" %s', str(admin_id), str(admin))
         if not admin:
             return jsonify(response_object), 404
         else:

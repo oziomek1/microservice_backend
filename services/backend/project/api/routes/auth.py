@@ -13,6 +13,9 @@ auth_blueprint = Blueprint('auth', __name__)
 @auth_blueprint.route('/auth/register', methods=['POST'])
 def register_user():
     post_data, response_object = post_request()
+
+    from flask import current_app
+    current_app.logger.info('/auth/register "post_data" %s', str(post_data))
     if not post_data:
         return jsonify(response_object), 400
 
@@ -48,6 +51,9 @@ def register_user():
 @auth_blueprint.route('/auth/login', methods=['POST'])
 def login_user():
     post_data, response_object = post_request()
+
+    from flask import current_app
+    current_app.logger.info('/auth/login "post_data" %s', str(post_data))
     if not post_data:
         return jsonify(response_object), 400
 
@@ -86,6 +92,9 @@ def logout_user(response):
 @authenticate
 def get_user_status(response):
     user = User.query.filter_by(id=response).first()
+
+    from flask import current_app
+    current_app.logger.info('/auth/status "user" %s', str(user))
     response_object = {
         'status': 'success',
         'message': 'Success.',
