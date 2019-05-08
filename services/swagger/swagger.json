@@ -104,18 +104,22 @@
         ],
         "parameters": [
           {
-            "in": "query",
-            "name": "email",
-            "description": "User email address",
+            "in": "body",
+            "name": "body",
             "required": true,
-            "type": "string"
-          },
-          {
-            "name": "password",
-            "in": "query",
-            "description": "User password",
-            "required": true,
-            "type": "string"
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "type": "string",
+                  "example": "adam@email.com"
+                },
+                "password": {
+                  "type": "string",
+                  "example": "adam_password"
+                }
+              }
+            }
           }
         ],
         "responses": {
@@ -146,6 +150,15 @@
         ],
         "produces": [
           "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "description": "Authorization token",
+            "required": false,
+            "type": "string"
+          }
         ],
         "responses": {
           "200": {
