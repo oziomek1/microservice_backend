@@ -11,7 +11,12 @@ mycol = crawlerdb["results"]
 
 @crawler_blueprint.route('/crawler/<phrase>', methods=['GET', 'POST'])
 def longtask(phrase):
+
+    from flask import current_app
+    current_app.logger.info('/crawler/%s "Starting task..." %s', str(phrase))
     task = execute_task.apply_async((phrase,))
+
+    current_app.logger.info('/crawler/%s "task.id" %s', str(task.id))
     return jsonify({
         'task_id': task.id,
         'Location': url_for('crawler.task_info', task_id=task.id)
