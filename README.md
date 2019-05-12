@@ -1,5 +1,22 @@
 # microservice_backend
 
+## How to use it?
+
+#### You can use `start.sh` bash script or commands from Commands list
+
+## How to use `start.sh`?
+
+#### 1. `chmod +x start.sh`
+#### 2. `./start.sh`
+
+#### If you won't use any flag it will build containers, start them and seed the database
+
+### Possible flags:
+
+#### flag `-test` run all tests
+#### flag `-recreate` recreates database and seed it with example data
+#### flag `-stop` stops containers
+
 ## Commands list:
 
 ##### Check code style before each new commit!
