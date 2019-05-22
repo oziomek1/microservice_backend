@@ -181,7 +181,7 @@ class TestAuthBlueprint(BaseTestCase):
             response = self.client.get(
                 '/auth/logout',
                 headers={
-                    'Authorization': f'Bearer {token}',
+                    'Authorization': f'{token}',
                 }
             )
             data = json.loads(response.data.decode())
@@ -194,7 +194,7 @@ class TestAuthBlueprint(BaseTestCase):
             response = self.client.get(
                 '/auth/logout',
                 headers={
-                    'Authorization': f'Bearer invalid',
+                    'Authorization': f'invalid',
                 }
             )
             data = json.loads(response.data.decode())
@@ -221,13 +221,51 @@ class TestAuthBlueprint(BaseTestCase):
             response = self.client.get(
                 '/auth/logout',
                 headers={
-                    'Authorization': f'Bearer {token}',
+                    'Authorization': f'{token}',
                 }
             )
             data = json.loads(response.data.decode())
             self.assertEqual(response.status_code, 401)
             self.assertTrue(data['status'] == 'fail')
             self.assertTrue(data['message'] == 'Token expired. Log in again.')
+
+    def test_valid_user_logout_twice(self):
+        username = 'test'
+        email = 'test@test.com'
+        password = 'example_password'
+        add_user(username=username, email=email, password=password)
+        with self.client:
+            response = self.client.post(
+                '/auth/login',
+                data=json.dumps({
+                    'email': email,
+                    'password': password,
+                }),
+                content_type='application/json',
+            )
+            token = json.loads(response.data.decode())['auth_token']
+            response = self.client.get(
+                '/auth/logout',
+                headers={
+                    'Authorization': f'{token}',
+                }
+            )
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 200)
+            self.assertTrue(data['status'] == 'success')
+            self.assertTrue(data['message'] == 'Successfully logged out.')
+
+            token = json.loads(response.data.decode())['auth_token']
+            response = self.client.get(
+                '/auth/logout',
+                headers={
+                    'Authorization': f'{token}',
+                }
+            )
+            data = json.loads(response.data.decode())
+            self.assertEqual(response.status_code, 401)
+            self.assertTrue(data['status'] == 'fail')
+            self.assertTrue(data['message'] == 'Token blacklisted. Log in again.')
 
     def test_invalid_logout_no_token(self):
         with self.client:
@@ -257,7 +295,7 @@ class TestAuthBlueprint(BaseTestCase):
             response = self.client.get(
                 '/auth/status',
                 headers={
-                    'Authorization': f'Bearer {token}',
+                    'Authorization': f'{token}',
                 }
             )
             data = json.loads(response.data.decode())
@@ -274,7 +312,7 @@ class TestAuthBlueprint(BaseTestCase):
             response = self.client.get(
                 '/auth/status',
                 headers={
-                    'Authorization': f'Bearer invalid',
+                    'Authorization': f'invalid',
                 }
             )
             data = json.loads(response.data.decode())
@@ -305,7 +343,7 @@ class TestAuthBlueprint(BaseTestCase):
             response = self.client.get(
                 '/auth/logout',
                 headers={
-                    'Authorization': f'Bearer {token}',
+                    'Authorization': f'{token}',
                 }
             )
             data = json.loads(response.data.decode())
@@ -336,7 +374,7 @@ class TestAuthBlueprint(BaseTestCase):
             response = self.client.get(
                 '/auth/status',
                 headers={
-                    'Authorization': f'Bearer {token}',
+                    'Authorization': f'{token}',
                 }
             )
             data = json.loads(response.data.decode())

@@ -1,7 +1,8 @@
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, request
 from sqlalchemy import exc, or_
 
 from project import db, bcrypt
+from project.api.models.blacklist_token import BlacklistToken
 from project.api.models.user import User
 from project.api.utils import authenticate
 from project.api.utils import post_request
@@ -65,6 +66,7 @@ def login_user():
             auth_token = user.encode_auth_token(user.id)
             if auth_token:
                 response_object = {
+                    'user_id': user.id,
                     'status': 'success',
                     'message': 'Successfully logged in.',
                     'auth_token': auth_token.decode(),
@@ -81,11 +83,33 @@ def login_user():
 @auth_blueprint.route('/auth/logout', methods=['GET'])
 @authenticate
 def logout_user(response):
-    response_object = {
-        'status': 'success',
-        'message': 'Successfully logged out.'
-    }
-    return jsonify(response_object), 200
+    post_data, response_object = post_request()
+
+    from flask import current_app
+    auth_token = request.headers.get('Authorization')
+    current_app.logger.info('/auth/logout for auth_token: %s', str(auth_token))
+    if auth_token:
+        decoded_auth_token = User.decode_auth_token(auth_token=auth_token)
+        if not isinstance(decoded_auth_token, str):
+            blacklist_token = BlacklistToken(token=auth_token)
+            try:
+                db.session.add(blacklist_token)
+                db.session.commit()
+                response_object = {
+                    'auth_token': auth_token,
+                    'status': 'success',
+                    'message': 'Successfully logged out.'
+                }
+                return jsonify(response_object), 200
+            except Exception as e:
+                response_object['message'] = e
+                return jsonify(response_object), 500
+        else:
+            response_object['message'] = decoded_auth_token
+            return jsonify(response_object), 401
+    else:
+        response_object['message'] = 'Provide valid auth token.'
+        return jsonify(response_object), 403
 
 
 @auth_blueprint.route('/auth/status', methods=['GET'])

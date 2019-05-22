@@ -5,6 +5,7 @@ from flask import current_app
 from sqlalchemy.sql import func
 
 from project import db, bcrypt
+from project.api.models.blacklist_token import BlacklistToken
 
 
 class User(db.Model):
@@ -47,7 +48,13 @@ class User(db.Model):
     def decode_auth_token(auth_token):
         try:
             payload = jwt.decode(auth_token, current_app.config.get('SECRET_KEY'))
-            return payload['sub']
+            current_app.logger.info('/decode_auth_token payload[sub]: %s', str(payload['sub']))
+            is_blacklisted_token = BlacklistToken.check_blacklist(auth_token=auth_token)
+            current_app.logger.info('/decode_auth_token is_blacklisted_token: %s', str(is_blacklisted_token))
+            if is_blacklisted_token:
+                return 'Token blacklisted. Log in again.'
+            else:
+                return payload['sub']
         except jwt.ExpiredSignatureError:
             return 'Token expired. Log in again.'
         except jwt.InvalidTokenError:
