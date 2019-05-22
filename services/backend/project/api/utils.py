@@ -13,11 +13,10 @@ def authenticate(func):
             'message': 'Provide valid auth token.',
         }
         code = 401
-        auth_header = request.headers.get('Authorization')
-        if not auth_header:
+        auth_token = request.headers.get('Authorization')
+        if not auth_token:
             code = 403
             return jsonify(response_object), code
-        auth_token = auth_header.split(' ')[1]
         decoded_auth_token = User.decode_auth_token(auth_token)
         if isinstance(decoded_auth_token, str):
             response_object['message'] = decoded_auth_token

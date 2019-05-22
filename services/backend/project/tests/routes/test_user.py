@@ -39,7 +39,7 @@ class TestUserService(BaseTestCase):
                 }),
                 content_type='application/json',
                 headers={
-                    'Authorization': f'Bearer {token}',
+                    'Authorization': f'{token}',
                 }
             )
             data = json.loads(response.data.decode())
@@ -65,7 +65,7 @@ class TestUserService(BaseTestCase):
                 data=json.dumps({}),
                 content_type='application/json',
                 headers={
-                    'Authorization': f'Bearer {token}',
+                    'Authorization': f'{token}',
                 }
             )
             data = json.loads(response.data.decode())
@@ -94,7 +94,7 @@ class TestUserService(BaseTestCase):
                 }),
                 content_type='application/json',
                 headers={
-                    'Authorization': f'Bearer {token}',
+                    'Authorization': f'{token}',
                 }
             )
             data = json.loads(response.data.decode())
@@ -123,7 +123,7 @@ class TestUserService(BaseTestCase):
                 }),
                 content_type='application/json',
                 headers={
-                    'Authorization': f'Bearer {token}',
+                    'Authorization': f'{token}',
                 }
             )
             data = json.loads(response.data.decode())
@@ -151,7 +151,7 @@ class TestUserService(BaseTestCase):
                 }),
                 content_type='application/json',
                 headers={
-                    'Authorization': f'Bearer {token}',
+                    'Authorization': f'{token}',
                 }
             )
             data = json.loads(response.data.decode())
@@ -181,7 +181,7 @@ class TestUserService(BaseTestCase):
                 }),
                 content_type='application/json',
                 headers={
-                    'Authorization': f'Bearer {token}',
+                    'Authorization': f'{token}',
                 }
             )
             response = self.client.post(
@@ -193,7 +193,7 @@ class TestUserService(BaseTestCase):
                 }),
                 content_type='application/json',
                 headers={
-                    'Authorization': f'Bearer {token}',
+                    'Authorization': f'{token}',
                 }
             )
             data = json.loads(response.data.decode())
@@ -286,7 +286,7 @@ class TestUserService(BaseTestCase):
                 }),
                 content_type='application/json',
                 headers={
-                    'Authorization': f'Bearer {token}',
+                    'Authorization': f'{token}',
                 }
             )
             data = json.loads(response.data.decode())
