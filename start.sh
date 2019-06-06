@@ -51,20 +51,20 @@ then
 	echo "Container go to sleep"
 	docker-compose -f docker-compose-dev.yml stop
 	printf "${RED}Everything is done...${NC}\n"
-	exit 1
+	exit 0
 elif [[ $recreate == "yes" ]]
 then
 	printf "${RED}Recreate database...${NC}\n"
 	docker-compose -f docker-compose-dev.yml run backend python manage.py recreate_db
 	docker-compose -f docker-compose-dev.yml run backend python manage.py seed_db
 	printf "${RED}Everything is done...${NC}\n"
-	exit 2
+	exit 0
 elif [[ $stop == "yes" ]]
 then
 	printf "${RED}Container go to sleep${NC}\n"
 	docker-compose -f docker-compose-dev.yml stop
 	printf "${RED}Everything is done...${NC}\n"
-	exit 3
+	exit 0
 else
 	printf "${RED}Backend starts...${NC}\n"
 	docker-compose -f docker-compose-dev.yml build
