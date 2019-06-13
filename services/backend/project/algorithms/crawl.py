@@ -6,5 +6,5 @@ class Crawler:
         self.item = item
 
     def run(self):
-        time.sleep(5)
+        time.sleep(10)
         return 'http://lmgtfy.com/?q=' + self.item
